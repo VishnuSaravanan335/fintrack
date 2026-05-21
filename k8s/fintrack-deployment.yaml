@@ -16,16 +16,9 @@ spec:
     spec:
       containers:
       - name: fintrack-flask
-        image: fintrack-flask-app:latest   # Jenkins will push new tags
+        image: vishnu3335/fintrack-flask-app:latest   # replace with your Docker Hub repo
         ports:
         - containerPort: 5000
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "256Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
 ---
 apiVersion: v1
 kind: Service

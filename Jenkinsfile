@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY = "your-dockerhub-username"
-        IMAGE_NAME = "fintrack"
+        REGISTRY = "vishnu3335"
+        IMAGE_NAME = "fintrack-flask-app"
         NAMESPACE = "default"
         DEPLOYMENT = "fintrack-deployment"
     }
@@ -54,7 +54,7 @@ pipeline {
             steps {
                 script {
                     // Apply deployment resources first (in case it does not exist)
-                    sh "kubectl apply -f k8s/deployment.yaml -n $NAMESPACE"
+                    sh "kubectl apply -f k8s/fintrack-deployment.yaml -n $NAMESPACE"
                     // Perform rolling update with the new image tag
                     sh "kubectl set image deployment/$DEPLOYMENT $IMAGE_NAME=$REGISTRY/$IMAGE_NAME:\$BUILD_NUMBER -n $NAMESPACE"
                     // Monitor rollout status
