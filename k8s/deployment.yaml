@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: fintrack-deployment
-  namespace: default
   labels:
     app: fintrack
 spec:
@@ -16,26 +15,27 @@ spec:
         app: fintrack
     spec:
       containers:
-      - name: fintrack
-        image: your-dockerhub-username/fintrack:latest
+      - name: fintrack-flask
+        image: fintrack-flask-app:latest   # Jenkins will push new tags
         ports:
         - containerPort: 5000
-        imagePullPolicy: Always
-        env:
-        - name: SECRET_KEY
-          value: "fintrack-k8s-prod-secret-key-12345"
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: fintrack-service
-  namespace: default
-  labels:
-    app: fintrack
 spec:
-  ports:
-  - port: 80
-    targetPort: 5000
+  type: NodePort
   selector:
     app: fintrack
-  type: ClusterIP
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30080

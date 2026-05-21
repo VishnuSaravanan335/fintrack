@@ -1,7 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: grafana-deployment
+  name: grafana
   namespace: monitoring
 spec:
   replicas: 1
@@ -14,19 +19,17 @@ spec:
         app: grafana
     spec:
       containers:
-        - name: grafana
-          image: grafana/grafana:8.2.0
-          ports:
-            - containerPort: 3000
-          env:
-            - name: GF_SECURITY_ADMIN_PASSWORD
-              value: admin
-          volumeMounts:
-            - name: grafana-storage
-              mountPath: /var/lib/grafana
-      volumes:
-        - name: grafana-storage
-          emptyDir: {}
+      - name: grafana
+        image: grafana/grafana:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
 ---
 apiVersion: v1
 kind: Service
@@ -34,9 +37,10 @@ metadata:
   name: grafana-service
   namespace: monitoring
 spec:
+  type: NodePort
   selector:
     app: grafana
   ports:
-    - port: 80
+    - port: 3000
       targetPort: 3000
-  type: NodePort
+      nodePort: 30300
