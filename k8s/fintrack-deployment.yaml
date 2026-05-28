@@ -16,9 +16,11 @@ spec:
     spec:
       containers:
       - name: fintrack-flask
-        image: vishnu3335/fintrack-flask-app:latest   # replace with your Docker Hub repo
+        image: 512466680445.dkr.ecr.us-east-1.amazonaws.com/fintrack:11
         ports:
         - containerPort: 5000
+      imagePullSecrets:
+      - name: ecr-secret
 ---
 apiVersion: v1
 kind: Service
